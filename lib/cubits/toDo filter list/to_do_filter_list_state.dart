@@ -7,8 +7,8 @@ class ToDoFilterListState extends Equatable {
   @override
   List<Object> get props => [todoFilteredList];
 
-  ToDoFilterListState copyWith(List<ToDoModel> todoFilterList) {
-    return ToDoFilterListState(todoFilteredList: todoFilterList);
+  ToDoFilterListState copyWith(List<ToDoModel> filteredList) {
+    return ToDoFilterListState(todoFilteredList: filteredList);
   }
 
   factory ToDoFilterListState.initial() {

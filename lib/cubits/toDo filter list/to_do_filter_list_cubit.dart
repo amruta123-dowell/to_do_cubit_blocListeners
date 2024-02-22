@@ -18,11 +18,13 @@ class ToDoFilterListCubit extends Cubit<ToDoFilterListState> {
   final TodoListCubit todoListCubit;
   final ToDoFilterCubit filterCubit;
   final ToDoSearchCubit toDoSearchCubit;
-  ToDoFilterListCubit({
-    required this.todoListCubit,
-    required this.filterCubit,
-    required this.toDoSearchCubit,
-  }) : super(ToDoFilterListState.initial()) {
+  final List<ToDoModel> initialToDoList;
+  ToDoFilterListCubit(
+      {required this.todoListCubit,
+      required this.filterCubit,
+      required this.toDoSearchCubit,
+      required this.initialToDoList})
+      : super(ToDoFilterListState(todoFilteredList: initialToDoList)) {
     filterSubscription = todoListCubit.stream.listen((event) {});
     filteredTodoSubscription = filterCubit.stream.listen((event) {});
     searchListSubscription = toDoSearchCubit.stream.listen((event) {});
@@ -43,7 +45,7 @@ class ToDoFilterListCubit extends Cubit<ToDoFilterListState> {
         break;
 
       case Filter.all:
-        // default:
+      default:
         _filteredToDo = todoListCubit.state.todoList;
         break;
     }

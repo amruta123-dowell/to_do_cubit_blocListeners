@@ -6,13 +6,14 @@ import 'package:to_do_app/cubits/todo%20list%20cubit/todo_cubit.dart';
 import 'package:to_do_app/cubits/todoCount/to_do_count_cubit.dart';
 
 import '../models/to_do_model.dart';
+import '../widgets/to_do_list_widget.dart';
 
 class ToDoPage extends StatelessWidget {
   const ToDoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
         body: SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
@@ -22,10 +23,14 @@ class ToDoPage extends StatelessWidget {
             children: [
               HeaderWidget(),
               CreateTodoWidget(),
-              const SizedBox(
+              SizedBox(
                 height: 30,
               ),
-              SearchAndFilterButtonWidget()
+              SearchAndFilterButtonWidget(),
+              SizedBox(
+                height: 30,
+              ),
+              ToDoListWidget()
             ],
           ),
         ),

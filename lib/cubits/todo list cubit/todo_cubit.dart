@@ -14,8 +14,6 @@ class TodoListCubit extends Cubit<TodoListState> {
     final value = ToDoModel(description: todoDesc);
     final newList = [...state.todoList, value];
     emit(state.copyWith(newList));
-    log(state.toString());
-    print(state.todoList.length);
   }
 
   void editTodo(String id, String desc) {
