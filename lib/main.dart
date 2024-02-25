@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ToDoFilterCubit>(create: (context) => ToDoFilterCubit()),
-        BlocProvider<ToDoSearchCubit>(create: (context) => ToDoSearchCubit()),
+        // BlocProvider<ToDoFilterCubit>(create: (context) => ToDoFilterCubit()),
+        // BlocProvider<ToDoSearchCubit>(create: (context) => ToDoSearchCubit()),
         BlocProvider<TodoListCubit>(create: (context) => TodoListCubit()),
         BlocProvider<TodoCountCubit>(
             create: (context) => TodoCountCubit(
