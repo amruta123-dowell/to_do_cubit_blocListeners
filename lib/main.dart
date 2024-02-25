@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       providers: [
         // BlocProvider<ToDoFilterCubit>(create: (context) => ToDoFilterCubit()),
         // BlocProvider<ToDoSearchCubit>(create: (context) => ToDoSearchCubit()),
-        BlocProvider<TodoListCubit>(create: (context) => TodoListCubit()),
+        // BlocProvider<TodoListCubit>(create: (context) => TodoListCubit()),
         BlocProvider<TodoCountCubit>(
             create: (context) => TodoCountCubit(
                 todoInitialCount:
