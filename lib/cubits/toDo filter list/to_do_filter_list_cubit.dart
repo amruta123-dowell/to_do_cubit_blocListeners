@@ -25,40 +25,48 @@ class ToDoFilterListCubit extends Cubit<ToDoFilterListState> {
       required this.toDoSearchCubit,
       required this.initialToDoList})
       : super(ToDoFilterListState(todoFilteredList: initialToDoList)) {
-    filterSubscription = todoListCubit.stream.listen((event) {});
-    filteredTodoSubscription = filterCubit.stream.listen((event) {});
-    searchListSubscription = toDoSearchCubit.stream.listen((event) {});
+    filterSubscription = todoListCubit.stream.listen((event) {
+      setTodoList();
+    });
+    filteredTodoSubscription = filterCubit.stream.listen((event) {
+      setTodoList();
+    });
+    searchListSubscription = toDoSearchCubit.stream.listen((event) {
+      setTodoList();
+    });
   }
 
   void setTodoList() {
-    List<ToDoModel> _filteredToDo;
+    List<ToDoModel> filteredToDo;
     switch (filterCubit.state.filterState) {
       case Filter.active:
-        _filteredToDo = todoListCubit.state.todoList
+        filteredToDo = todoListCubit.state.todoList
             .where((element) => !element.isCompleted)
             .toList();
         break;
       case Filter.completed:
-        _filteredToDo = todoListCubit.state.todoList
+        filteredToDo = todoListCubit.state.todoList
             .where((element) => element.isCompleted)
             .toList();
         break;
 
       case Filter.all:
       default:
-        _filteredToDo = todoListCubit.state.todoList;
+        filteredToDo = todoListCubit.state.todoList;
         break;
     }
 
     if (toDoSearchCubit.state.searchItem.isNotEmpty) {
-      _filteredToDo = todoListCubit.state.todoList.where((element) {
-        return element.description
-            .toLowerCase()
-            .contains(toDoSearchCubit.state.searchItem);
-      }).toList();
+      filteredToDo = filteredToDo
+          .where((ToDoModel todo) => todo.description
+              .toLowerCase()
+              .contains(toDoSearchCubit.state.searchItem.toLowerCase()))
+          .toList();
+    } else {
+      filteredToDo = filteredToDo;
     }
 
-    emit(state.copyWith(_filteredToDo));
+    emit(state.copyWith(filteredToDo));
   }
 
   @override

@@ -27,7 +27,7 @@ class TodoListCubit extends Cubit<TodoListState> {
     emit(state.copyWith(newList));
   }
 
-  void changeTodStatus(String id) {
+  void changeTodoStatus(String id) {
     final newList = state.todoList.map((element) {
       if (element.id == id) {
         return ToDoModel(

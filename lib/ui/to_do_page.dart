@@ -5,6 +5,7 @@ import 'package:to_do_app/cubits/search_cubit/to_do_search_cubit.dart';
 import 'package:to_do_app/cubits/todo%20list%20cubit/todo_cubit.dart';
 import 'package:to_do_app/cubits/todoCount/to_do_count_cubit.dart';
 
+import '../bounce.dart';
 import '../models/to_do_model.dart';
 import '../widgets/to_do_list_widget.dart';
 
@@ -13,24 +14,24 @@ class ToDoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         body: SafeArea(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              HeaderWidget(),
-              CreateTodoWidget(),
-              SizedBox(
+              const HeaderWidget(),
+              const CreateTodoWidget(),
+              const SizedBox(
                 height: 30,
               ),
               SearchAndFilterButtonWidget(),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
-              ToDoListWidget()
+              const ToDoListWidget()
             ],
           ),
         ),
@@ -94,8 +95,8 @@ class _CreateTodoWidgetState extends State<CreateTodoWidget> {
 }
 
 class SearchAndFilterButtonWidget extends StatefulWidget {
-  const SearchAndFilterButtonWidget({super.key});
-
+  SearchAndFilterButtonWidget({super.key});
+  final debounce = Bounce(milliSeconds: 200);
   @override
   State<SearchAndFilterButtonWidget> createState() =>
       _SearchAndFilterButtonWidgetState();
@@ -105,6 +106,12 @@ class _SearchAndFilterButtonWidgetState
     extends State<SearchAndFilterButtonWidget> {
   TextEditingController searchController = TextEditingController();
   @override
+  void dispose() {
+    searchController.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -113,9 +120,7 @@ class _SearchAndFilterButtonWidgetState
           decoration: const InputDecoration(
               suffixIcon: Icon(Icons.search), filled: true),
           onChanged: (String? value) {
-            if (value != null && value.isNotEmpty) {
-              context.read<ToDoSearchCubit>().searchNewItem(value);
-            }
+            context.read<ToDoSearchCubit>().searchNewItem(value);
           },
         ),
         const SizedBox(
