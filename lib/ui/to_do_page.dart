@@ -52,12 +52,22 @@ class HeaderWidget extends StatelessWidget {
           "To Do",
           style: TextStyle(fontSize: 40),
         ),
-        BlocBuilder<TodoCountCubit, TodoCountState>(builder: (context, state) {
-          return Text(
-            "Total no.of Todos ${state.todoCount} ",
-            style: const TextStyle(fontSize: 20, color: Colors.red),
-          );
-        }),
+        BlocListener<TodoListCubit, TodoListState>(
+          listener: (context, state) {
+            final int toDoCount = state.todoList
+                .where((element) => !element.isCompleted)
+                .toList()
+                .length;
+            context.read<TodoCountCubit>().calculateActiveCount(toDoCount);
+          },
+          child: BlocBuilder<TodoCountCubit, TodoCountState>(
+              builder: (context, state) {
+            return Text(
+              "Total no.of Todos ${state.todoCount} ",
+              style: const TextStyle(fontSize: 20, color: Colors.red),
+            );
+          }),
+        ),
         // Text(
         //   "Total no.of Todos ${context.watch<TodoCountCubit>().state.todoCount} ",
         //   style: const TextStyle(fontSize: 20, color: Colors.red),

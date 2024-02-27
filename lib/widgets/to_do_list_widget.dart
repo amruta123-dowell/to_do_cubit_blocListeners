@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/cubits/filterCubit/to_do_filter_cubit.dart';
+import 'package:to_do_app/cubits/search_cubit/to_do_search_cubit.dart';
 import 'package:to_do_app/cubits/toDo%20filter%20list/to_do_filter_list_cubit.dart';
 import 'package:to_do_app/models/to_do_model.dart';
 
@@ -12,44 +14,70 @@ class ToDoListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var filteredTodo =
         context.watch<ToDoFilterListCubit>().state.todoFilteredList;
-    return ListView.separated(
-      itemCount: filteredTodo.length,
-      shrinkWrap: true,
-      primary: false,
-      itemBuilder: (context, index) {
-        return Dismissible(
-            onDismissed: (_) {
-              context.read<TodoListCubit>().deleteTodoItem(filteredTodo[index]);
-            },
-            confirmDismiss: (direction) {
-              return showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: const Text("Are you sure?"),
-                        content: const Text("Do you want to delete?"),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text("CANCEL")),
-                          TextButton(
-                              onPressed: () {
-                                context
-                                    .read<TodoListCubit>()
-                                    .deleteTodoItem(filteredTodo[index]);
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("OK"))
-                        ],
-                      ));
-            },
-            background: showBackGnd(0),
-            secondaryBackground: showBackGnd(1),
-            key: ValueKey(filteredTodo[index].id),
-            child: NewItemCheckBoxWidget(item: filteredTodo[index]));
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return const Divider();
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<TodoListCubit, TodoListState>(listener: (context, state) {
+          context.read<ToDoFilterListCubit>().setTodoList(
+              context.read<ToDoFilterCubit>().state.filterState,
+              state.todoList,
+              context.read<ToDoSearchCubit>().state.searchItem);
+        }),
+        BlocListener<ToDoFilterCubit, ToDoFilterState>(
+            listener: (context, state) {
+          context.read<ToDoFilterListCubit>().setTodoList(
+              state.filterState,
+              context.read<TodoListCubit>().state.todoList,
+              context.read<ToDoSearchCubit>().state.searchItem);
+        }),
+        BlocListener<ToDoSearchCubit, ToDoSearchState>(
+            listener: (context, state) {
+          context.read<ToDoFilterListCubit>().setTodoList(
+              context.read<ToDoFilterCubit>().state.filterState,
+              context.read<TodoListCubit>().state.todoList,
+              state.searchItem);
+        })
+      ],
+      child: ListView.separated(
+        itemCount: filteredTodo.length,
+        shrinkWrap: true,
+        primary: false,
+        itemBuilder: (context, index) {
+          return Dismissible(
+              onDismissed: (_) {
+                context
+                    .read<TodoListCubit>()
+                    .deleteTodoItem(filteredTodo[index]);
+              },
+              confirmDismiss: (direction) {
+                return showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: const Text("Are you sure?"),
+                          content: const Text("Do you want to delete?"),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text("CANCEL")),
+                            TextButton(
+                                onPressed: () {
+                                  context
+                                      .read<TodoListCubit>()
+                                      .deleteTodoItem(filteredTodo[index]);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("OK"))
+                          ],
+                        ));
+              },
+              background: showBackGnd(0),
+              secondaryBackground: showBackGnd(1),
+              key: ValueKey(filteredTodo[index].id),
+              child: NewItemCheckBoxWidget(item: filteredTodo[index]));
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const Divider();
+        },
+      ),
     );
   }
 }
