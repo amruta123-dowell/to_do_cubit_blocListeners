@@ -130,7 +130,7 @@ class _NewItemCheckBoxWidgetState extends State<NewItemCheckBoxWidget> {
                     decoration: InputDecoration(
                         errorStyle: const TextStyle(color: Colors.red),
                         errorText:
-                            _error ? "Text should not be empty. " : null),
+                            _error ? "Text should not be empty." : null),
                   ),
                   actions: [
                     TextButton(
